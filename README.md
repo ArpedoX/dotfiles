@@ -1,2 +1,2 @@
 # dotfiles
-arch linux + hyprland
+## Arch Linux + Hyprland
