@@ -1,0 +1,144 @@
+#   ██   ████
+#  ░██  ░██░
+#  ░██ ██████ ██████  █████
+#  ░██░░░██░ ░░██░░█ ██░░░██
+#  ░██  ░██   ░██ ░ ░██  ░░
+#  ░██  ░██   ░██   ░██   ██
+#  ███  ░██  ░███   ░░█████
+# ░░░   ░░   ░░░     ░░░░░
+
+set previewer /home/ufuk/.config/lf/lf-kitty-previewer
+set cleaner /home/ufuk/.config/lf/lf-kitty-cleaner
+
+# Basic Settings
+
+set hidden false
+set ignorecase true
+set preview true
+set icons true
+
+# Custom Functions
+
+cmd copy_path &{{
+    pwd | xclip -selection clipboard
+    echo "Current directory path copied to clipboard"
+}}
+
+cmd copy_name &{{
+    printf "%s" "$(basename "$f")" | xclip -selection clipboard
+    echo "File name copied to clipboard"
+}}
+
+cmd open &{{
+    case $(file --mime-type -Lb $f) in
+        text/*) lf -remote "send $id nvim \$fx";;
+        *) for f in $fx; do $OPENER $f > /dev/null 2> /dev/null & done;;
+    esac
+}}
+
+cmd setwallpaper &{{
+    swww img $f
+}}
+
+cmd nvim ${{
+  nvim $f
+}}
+
+cmd mkdir ${{
+  printf "Directory Name: "
+  read ans
+  mkdir $ans
+}}
+
+cmd mkfile ${{
+  printf "File Name: "
+  read ans
+  nvim $ans
+}}
+
+# Archive bindings
+cmd unarchive ${{
+  case "$f" in
+      *.zip) unzip "$f" ;;
+      *.tar.gz) tar -xzvf "$f" ;;
+      *.tar.bz2) tar -xjvf "$f" ;;
+      *.tar) tar -xvf "$f" ;;
+      *) echo "Unsupported format" ;;
+  esac
+}}
+
+# Trash bindings
+cmd trash ${{
+  files=$(printf "$fx" | tr '\n' ';')
+  while [ "$files" ]; do
+    file=${files%%;*}
+
+    trash-put "$(basename "$file")"
+    if [ "$files" = "$file" ]; then
+      files=''
+    else
+      files="${files#*;}"
+    fi
+  done
+}}
+
+cmd restore_trash ${{
+  trash-restore
+}}
+
+cmd empty_trash ${{
+  trash-empty
+}}
+
+# Rename function
+cmd rename ${{
+  printf "Enter new file name: "
+  read -r new_name
+  mv "$(basename "$f")" "$(dirname "$f")/$new_name"
+}}
+
+# Bindings
+map t
+map m
+map c
+map d
+
+map ae $wine "$f"
+map v $code "$f"
+map o $obsidian "$f"
+map e $nvim "$f"
+map k $kitty +kitten icat "$f" & sleep 2 & clear
+
+# Basic Functions
+map tt trash
+map tr restore_trash
+map te empty_trash
+
+map <enter> open
+map . set hidden!
+map p paste
+map x cut
+map y copy
+map r rename
+map mf mkfile
+map md mkdir
+map cn copy_name
+map cp copy_path
+map C clear
+map R reload
+map au unarchive
+
+map w setwallpaper
+
+# Movement
+map gk cd /
+map gh cd /home/ufuk
+map gd cd ~/Downloads
+map gv cd ~/Devoloper
+map gp cd ~/pictures
+map gc cd ~/.config
+map gr cd ~/repos
+map gs cd ~/.local/bin
+map gt cd ~/.local/share/Trash/files
+map gw cd ~/pictures/background/
+map gm cd /run/media
