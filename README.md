@@ -1,4 +1,5 @@
 # dotfiles
+**bu yapılandırmayı soldoestechv4 üzerinde gerçekleştirdim, bazı scriptler vs için gerekebilir**
 ## Arch Linux + Hyprland
 ![image](https://github.com/UF7K00/dotfiles/assets/123476516/14627661-cd2a-48c4-ab2c-d21c2047bfce)
 ![image](https://github.com/UF7K00/dotfiles/assets/123476516/ed1a23ba-8954-4169-8bda-e7fd7789ec42)
